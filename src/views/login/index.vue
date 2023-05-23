@@ -16,7 +16,11 @@
           <Edit />
         </el-icon> -->
         <svg-icon icon="password" class="svg-container"></svg-icon>
-        <el-input v-model="form.password" />
+        <el-input v-model="form.password" :type="passwordType" />
+        <svg-icon
+          :icon="passwordType === 'password' ? 'eye' : 'eye-open'"
+          @click="changeType"
+        ></svg-icon>
       </el-form-item>
       <el-button type="primary" class="login-button" @click="handleLogin"
         >登录</el-button
@@ -28,9 +32,10 @@
 <script setup>
 import { reactive, ref } from 'vue'
 // import { Edit } from '@element-plus/icons-vue'
-const form = reactive({
-  username: '',
-  password: ''
+import { login } from '@/api/login'
+const form = ref({
+  username: 'admin',
+  password: '123456'
 })
 const rules = reactive({
   username: [
@@ -42,19 +47,30 @@ const rules = reactive({
       message: 'Please input Activity password',
       trigger: 'blur'
     },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+    { min: 3, max: 10, message: 'Length should be 3 to 5', trigger: 'blur' }
   ]
 })
 const formRef = ref(null)
 const handleLogin = () => {
-  formRef.value.validate((valid) => {
+  formRef.value.validate(async (valid) => {
     if (valid) {
-      alert('submit')
+      // alert('submit')
+      // 登录成功后传用户信息，form表单->login
+      const res = await login(form.value)
+      console.log(res)
     } else {
       console.log('error submit')
       return false
     }
   })
+}
+const passwordType = ref('password')
+const changeType = () => {
+  if (passwordType.value === 'password') {
+    passwordType.value = 'text'
+  } else {
+    passwordType.value = 'password'
+  }
 }
 </script>
 

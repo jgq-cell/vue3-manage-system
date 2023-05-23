@@ -18,6 +18,7 @@ module.exports = {
       })
     ]
   },
+  // webpack配置
   chainWebpack(config) {
     // 设置 svg-sprite-loader
     // config 为 webpack 配置对象
@@ -63,6 +64,25 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
+  },
+  // 解决发送请求的跨域问题
+  devServer: {
+    https: false,
+    hot: false,
+    // 关闭 Uncaught error 的全屏提示
+    client: {
+      overlay: false
+    },
+    // 代理中设置api: 项目中请求路径为api的替换为target
+    proxy: {
+      '/api': {
+        target: 'http://43.143.0.76:8889/api/private/v1', // 代理地址：此处地址会替换axios中设置的baseURL
+        changeOrigin: true, // 接口跨域，需要设置
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   }
 }
 
