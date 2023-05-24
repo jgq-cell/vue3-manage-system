@@ -31,8 +31,11 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 // import { Edit } from '@element-plus/icons-vue'
-import { login } from '@/api/login'
+// import { login } from '@/api/login'
+
+const store = useStore()
 const form = ref({
   username: 'admin',
   password: '123456'
@@ -56,8 +59,9 @@ const handleLogin = () => {
     if (valid) {
       // alert('submit')
       // 登录成功后传用户信息，form表单->login
-      const res = await login(form.value)
-      console.log(res)
+      // const res = await login(form.value)
+      // console.log(res)
+      store.dispatch('app/login', form.value)
     } else {
       console.log('error submit')
       return false

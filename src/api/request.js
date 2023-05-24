@@ -6,9 +6,19 @@ const service = axios.create({
   timeout: 5000
 })
 
+// 所有接口请求添加token
+service.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = localStorage.getItem('token')
+    return config
+  },
+  (error) => {
+    return Promise.reject(new Error(error))
+  }
+)
+// 响应格式化 data-> data, meta
 service.interceptors.response.use(
   (response) => {
-    console.log(response)
     const { data, meta } = response.data
     if (meta.status === 200 || meta.status === 201) {
       return data
